@@ -7,12 +7,14 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import Users from './Components/Users/Users';
 import axios from 'axios';
 import Search from './Components/Users/Search';
+import { Alert } from './Components/Layout/Alert';
 library.add(fab);
 
 export class App extends Component {
   state = {
     users: [],
-    loading: false
+    loading: false,
+    alert: null
   };
   // async componentDidMount() {
   //   // console.log(process.env.REACT_APP_GITHUB_CLIENT_ID);
@@ -45,6 +47,13 @@ export class App extends Component {
       loading: false
     });
   };
+  setAlert = (msg, type) => {
+    this.setState({
+      alert: { msg: msg, type: type }
+    });
+
+    setTimeout(() => this.setState({ alert: null }), 3000);
+  };
   render() {
     const { users, loading } = this.state;
     return (
@@ -52,10 +61,12 @@ export class App extends Component {
         <Navbar />
         {/* <UserItem /> */}
         <div className="container">
+          <Alert alert={this.state.alert} />
           <Search
             searchUsers={this.searchUsers}
             clearUsers={this.clearUsers}
             showClear={users.length > 0 ? true : false}
+            setAlert={this.setAlert}
           />
           <Users loading={loading} users={users} />
         </div>
