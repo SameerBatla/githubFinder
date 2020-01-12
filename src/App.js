@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import './App.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from './Components/Layout/Navbar';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 // import UserItem from './Components/Layout/Users/UserItem';
 import Users from './Components/Users/Users';
 import axios from 'axios';
 import Search from './Components/Users/Search';
 import { Alert } from './Components/Layout/Alert';
-library.add(fab);
+import { About } from './Components/Pages/About';
+
+library.add(fab, faInfoCircle);
 
 export class App extends Component {
   state = {
@@ -57,20 +61,33 @@ export class App extends Component {
   render() {
     const { users, loading } = this.state;
     return (
-      <div className="App">
-        <Navbar />
-        {/* <UserItem /> */}
-        <div className="container">
-          <Alert alert={this.state.alert} />
-          <Search
-            searchUsers={this.searchUsers}
-            clearUsers={this.clearUsers}
-            showClear={users.length > 0 ? true : false}
-            setAlert={this.setAlert}
-          />
-          <Users loading={loading} users={users} />
+      <Router>
+        <div className="App">
+          <Navbar />
+          {/* <UserItem /> */}
+          <div className="container">
+            <Alert alert={this.state.alert} />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <>
+                    <Search
+                      searchUsers={this.searchUsers}
+                      clearUsers={this.clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      setAlert={this.setAlert}
+                    />
+                    <Users loading={loading} users={users} />
+                  </>
+                )}
+              />
+              <Route exact path="/about" component={About} />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }
